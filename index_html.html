@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Kalkulator Biner 4-Bit</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background: #f0f2f5; }
+        .card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 350px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #218838; }
+        .res-box { margin-top: 20px; padding: 10px; background: #f8f9fa; border-left: 5px solid #28a745; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3>Full Adder 4-Bit</h3>
+    <label>Biner A (4-bit):</label>
+    <input type="text" id="binA" maxlength="4" placeholder="Contoh: 1101">
+    
+    <label>Biner B (4-bit):</label>
+    <input type="text" id="binB" maxlength="4" placeholder="Contoh: 1011">
+    
+    <button onclick="hitungBiner()">Jumlahkan</button>
+
+    <div id="output" class="res-box" style="display:none">
+        <div id="sum"></div>
+        <div id="carry"></div>
+        <div id="full" style="font-weight:bold; margin-top:5px; color:blue;"></div>
+    </div>
+</div>
+
+<script>
+    // Ini adalah logika def full_adder(a, b, c) dari gambar image_8325bc.png
+    function full_adder(a, b, c) {
+        let sum = a ^ b ^ c;
+        let carry_out = (a & b) | (c & (a ^ b));
+        return [sum, carry_out];
+    }
+
+    function hitungBiner() {
+        let A = document.getElementById('binA').value;
+        let B = document.getElementById('binB').value;
+        
+        if(A.length < 4 || B.length < 4) {
+            alert("Harap masukkan 4 digit biner!");
+            return;
+        }
+
+        let carry = 0;
+        let hasil = "";
+
+        // Looping mundur (range 3 ke 0) seperti di baris 10 image_8325bc.png
+        for (let i = 3; i >= 0; i--) {
+            let bitA = parseInt(A[i]);
+            let bitB = parseInt(B[i]);
+            
+            let [s, c_out] = full_adder(bitA, bitB, carry);
+            hasil = s.toString() + hasil;
+            carry = c_out;
+        }
+
+        // Tampilkan Hasil
+        document.getElementById('output').style.display = "block";
+        document.getElementById('sum').innerText = "Sum: " + hasil;
+        document.getElementById('carry').innerText = "Carry Out: " + carry;
+        
+        if (carry > 0) {
+            document.getElementById('full').innerText = "Hasil Lengkap: " + carry + hasil;
+        } else {
+            document.getElementById('full').innerText = "Hasil Lengkap: " + hasil;
+        }
+    }
+</script>
+
+</body>
+</html>
